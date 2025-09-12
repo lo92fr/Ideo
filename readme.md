@@ -29,6 +29,13 @@ Today only bypass cmd are implemented, but other command will come soon !
 A big thanks to Guillaume Strub that make the original project on github https://github.com/lattic/rf2mqtt/ with an arduino and cc1101.
 He show me the way to go with it's code. It's him that first work on the reverse enginnering of the radio protocol.
 
+## Warning
+Be warn that this is not support at all by unelvent. The radio protocol is a closed protocol.
+Be also warned that there can be some conflict between your LCD Ideo 325 remote and this gateway.
+LCD Ideo 325 is not initially planned to work with multiple remove.
+So in some case, when you send command, you will see state update on the LCD display (this is the case for bypass and fanmode for exemple).
+In other case, command will be send to the VMC, but will no be catch / state update on the LCD display : this is the case for somme settings like airflow min/max speed, date settings, ...
+
 ## Electronics
 
 17	3,3v
@@ -102,4 +109,5 @@ https://github.com/fphammerle/python-cc1101/blob/master/cc1101/__init__.py
 https://github.com/SpaceTeddy/CC1101
 https://github.com/puuu/ESPiLight
 https://github.com/LSatan/SmartRC-CC1101-Driver-Lib
+
 
