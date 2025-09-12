@@ -105,8 +105,5 @@ https://github.com/LSatan/SmartRC-CC1101-Driver-Lib
 
 
 
-FFFF FFFF
-
-
-
 1111 1111 1111 1111
+
