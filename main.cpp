@@ -278,8 +278,26 @@ void sendCommand(const char *message) {
 }
 
 void on_message(struct mosquitto *, void *, const struct mosquitto_message *msg) {
+    if (!strstr(msg->topic, "vmc/cmd/")) {
+        std::cout << "Message reçu sur un topic inconnu: " << msg->topic << std::endl;
+        return;
+    }
+
+    if (strstr(msg->topic, "ForceBypassmode")) {
+        if (strstr((char*)msg->payload, "OFF")) {
+            sendCommand("1,40,00000000");
+        }
+        else if (strstr((char*)msg->payload, "ON")) {
+            sendCommand("1,40,00010022");
+        }
+    }
+    
     std::cout << "Message reçu sur " << msg->topic << ": "
               << (char*) msg->payload << std::endl;
+
+    sendCommand("0,33,00000000");
+    sendCommand("0,31,00000000");
+    sendCommand("0,32,00000000");
 }
 
 
