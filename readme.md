@@ -1,3 +1,36 @@
+#  VMC unelvent IDEO 325 radio gateway
+
+## Introduction
+
+This project is an VMC unelvent IDEO 325 radio gateway.
+The idea is to have an raspberry pi with a cc1101 radio gateway that will act as an IDEO 325 / MQQT gateway.
+This will enable to exploit the IDEO 325 VMC from a remote home automation platform like Openhab.
+
+The gateway is bidirectionnal.
+
+From the VMC, you will be able to retrieve information like:
+
+- Temperature : external, input, stale air.
+- VMC fan mode : low, high, away.
+- Bypass mode : off, auto, forced.
+
+You will also be able to send command to the VMC:
+- force Bypass mode.
+- Switch VMC on/off.
+- Set low and high fan speed.
+- Set Holiday mode.
+- Set schedule mode : Auto1, Auto2, Manual.
+- Toggle boost mode.
+
+Today only bypass cmd are implemented, but other command will come soon !
+
+## Special thanks
+
+A big thanks to Guillaume Strub that make the original project on github https://github.com/lattic/rf2mqtt/ with an arduino and cc1101.
+He show me the way to go with it's code. It's him that first work on the reverse enginnering of the radio protocol.
+
+## Electronics
+
 17	3,3v
 19	MOSI
 21	MISO
@@ -34,7 +67,8 @@ https://github.com/f4exb/picc1101
  CE1		OUT		26	11		OUT
  GPIO.6 	IN		18	5		-
  GPIO.5 	IN		22	6		-
- 
+
+ ## Reference
  
  https://docs.openmqttgateway.com/use/rf.html#what-is-an-rf-gateway
  
@@ -72,6 +106,7 @@ https://github.com/LSatan/SmartRC-CC1101-Driver-Lib
 
 
 FFFF FFFF
+
 
 
 1111 1111 1111 1111
