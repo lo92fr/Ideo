@@ -38,6 +38,8 @@ In other case, command will be send to the VMC, but will no be catch / state upd
 
 ## Electronics
 
+Will be completed later...
+
 17	3,3v
 19	MOSI
 21	MISO
@@ -109,5 +111,6 @@ https://github.com/fphammerle/python-cc1101/blob/master/cc1101/__init__.py
 https://github.com/SpaceTeddy/CC1101
 https://github.com/puuu/ESPiLight
 https://github.com/LSatan/SmartRC-CC1101-Driver-Lib
+
 
 
