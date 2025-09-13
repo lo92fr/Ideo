@@ -1,0 +1,159 @@
+config:
+  label: VMC
+  order: "90000000"
+  sidebar: true
+blocks:
+  - component: oh-block
+    config: {}
+    slots:
+      default:
+        - component: oh-grid-row
+          config: {}
+          slots:
+            default:
+              - component: oh-grid-col
+                config:
+                  width: "5"
+                slots:
+                  default: []
+              - component: oh-grid-col
+                config: {}
+                slots:
+                  default:
+                    - component: widget:vmcIdeo
+                      config:
+                        bypassMode: VMC_Bypassmode
+                        date: VMC_Date
+                        day: VMC_Day
+                        fanMode: VMC_FanMode
+                        hour: VMC_Time
+                        scheduleMode: VMC_FanMode
+                        tempAirExterieure: VMC_Temperature_Sonde_Exterieure
+                        tempAirInsufle: VMC_Temperature_Sonde_Entree_Air_Neuf
+                        tempAirVicie: VMC_Temperature_Sonde_Air_Vicie
+                        vacancyMode: VMC_HolidayMode
+              - component: oh-grid-col
+                config:
+                  width: "5"
+                slots:
+                  default: []
+        - component: oh-grid-row
+          config: {}
+          slots:
+            default:
+              - component: oh-grid-col
+                config:
+                  style:
+                    padding-right: 10px
+                slots:
+                  default:
+                    - component: widget:ToogleButton
+                      config:
+                        iRows: "2"
+                        icons: airplane;rocket_fill
+                        item: VMC_OnOffState
+                        labels: ON;OFF
+                        style:
+                          margin: 20px
+                          padding: 20px
+                        title: VMC OnOff
+                        values: ON;OFF
+              - component: oh-grid-col
+                config:
+                  style:
+                    padding-right: 10px
+                slots:
+                  default:
+                    - component: widget:ToogleButton
+                      config:
+                        iRows: "3"
+                        icons: airplane;rocket_fill
+                        item: VMC_Schedule
+                        labels: Auto1;Auto2;Manual;
+                        title: Schedule
+                        values: 2;3;4;
+              - component: oh-grid-col
+                config:
+                  style:
+                    padding-right: 10px
+                slots:
+                  default:
+                    - component: widget:ToogleButton
+                      config:
+                        iRows: "3"
+                        icons: airplane;rocket_fill
+                        item: VMC_Bypassmode
+                        labels: ON;AUTO;OFF;
+                        title: Bypass
+                        values: 9;8;0;
+              - component: oh-grid-col
+                config:
+                  style:
+                    padding-right: 10px
+                slots:
+                  default:
+                    - component: widget:ToogleButton
+                      config:
+                        iRows: "2"
+                        icons: airplane;rocket_fill
+                        item: VMC_HolidayMode
+                        labels: ON;OFF
+                        title: Vacancy
+                        values: ON;OFF
+        - component: oh-grid-row
+          config: {}
+          slots:
+            default:
+              - component: oh-grid-col
+                config: {}
+                slots:
+                  default:
+                    - component: oh-knob-card
+                      config:
+                        item: VMC_LowFanSpeed
+                        max: 325
+                        min: 90
+                        releaseOnly: true
+                        responsive: true
+                        step: 5
+                        title: Air flow min
+              - component: oh-grid-col
+                config: {}
+                slots:
+                  default:
+                    - component: oh-knob-card
+                      config:
+                        item: VMC_HighFanSpeed
+                        max: 325
+                        min: 90
+                        releaseOnly: true
+                        responsive: true
+                        step: 5
+                        title: Air flow max
+              - component: oh-grid-col
+                config: {}
+                slots:
+                  default:
+                    - component: oh-label-card
+                      config:
+                        action: command
+                        actionCommand: ON
+                        actionItem: VMC_Boost
+                        background: "#70c0ff"
+                        fontSize: 48px
+                        fontWeight: "600"
+                        iconUseState: true
+                        item: VMC_Boost
+                        label: Boost
+                        outline: true
+                        style:
+                          color: white
+                          width: 200px
+                        vertical: false
+        - component: oh-grid-row
+          config: {}
+          slots:
+            default: []
+masonry: []
+grid: []
+canvas: []

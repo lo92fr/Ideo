@@ -1,0 +1,126 @@
+Number											
+	VMC_Temperature_Sonde_Exterieure
+	"Température sonde extérieure [%s]"			
+	(gVMC)
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:temperatureSondeEntreeAirExterieure"
+	}	 
+
+Number											
+	VMC_Temperature_Sonde_Air_Vicie
+	"Température sonde air vicié [%s]"			 
+	(gVMC)
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:temperatureSondeAirVicie"
+	}	 
+
+Number											 
+	VMC_Temperature_Sonde_Entree_Air_Neuf
+	"Température sonde entrée air neuf [%s]"			
+	(gVMC)
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:temperatureSondeEntreeAirNeuf"
+	}	 
+
+
+Number											 
+	VMC_Bypassmode
+	"Bypassmode [%s]"			
+	(gVMC)
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:bypassmode"
+	}	 
+
+Number											 
+	VMC_FanMode
+	"FanMode [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:fanMode"
+	}	 
+
+Switch											 
+	VMC_OnOffState
+	"OnOffState [%s]"			
+	(gVMC)
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:onOffState"
+	}	 
+
+Number											 
+	VMC_LowFanSpeed
+	"Low Fan Speed [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:lowFanSpeed"
+	}
+	
+Number											 
+	VMC_HighFanSpeed
+	"High Fan Speed [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:highFanSpeed"
+	}	
+	
+Switch											 
+	VMC_HolidayMode
+	"Holiday Mode [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	      
+	{ 
+		channel="mqtt:topic:local:VMC:holidayMode"
+	}		
+	
+DateTime									 
+	VMC_Date
+	"Date [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:date"
+	}			
+	
+DateTime									 
+	VMC_Time
+	"Time [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:date"
+	}	
+	
+DateTime									 
+	VMC_Day
+	"Day [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:date"
+	}				
+	
+Number											 
+	VMC_Schedule
+	"Schedule [%s]"			
+	(gVMC) 
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:schedule"
+	}		
+	
+Switch											 
+	VMC_Boost
+	"Boost [%s]"			
+	(gVMC)
+    [ "Measurement" ]	     
+	{ 
+		channel="mqtt:topic:local:VMC:boost"
+	}	 

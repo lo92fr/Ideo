@@ -1,0 +1,27 @@
+Bridge mqtt:broker:local "Mosquitto" [ host="127.0.0.1", secure=false, clientID="openhab"]
+{  
+  
+    Thing topic VMC "VMC" @ "melody" {   
+		Channels:   
+			Type number 	: temperatureSondeEntreeAirExterieure 				"temperatureSondeEntreeAirExterieure" 				[ stateTopic="vmc/state/temperatureSondeEntreeAirExterieure"	]
+			Type number 	: temperatureSondeEntreeAirNeuf 					"temperatureSondeEntreeAirNeuf" 					[ stateTopic="vmc/state/temperatureSondeEntreeAirNeuf"			]
+			Type number 	: temperatureSondeAirVicie 							"temperatureSondeAirVicie" 							[ stateTopic="vmc/state/temperatureSondeAirVicie"				]
+			
+			Type number 	: bypassmode 										"Bypassmode" 										[ stateTopic="vmc/state/bypassmode", 							commandTopic="vmc/cmd/bypassmode"  								]
+			Type number 	: fanMode 											"FanMode" 											[ stateTopic="vmc/state/fanMode", 								commandTopic="vmc/state/fanMode"  								]
+			Type switch 	: onOffState 										"OnOffState" 										[ stateTopic="vmc/state/onOffState", 							commandTopic="vmc/cmd/onOffState"  								]
+			
+			Type number 	: schedule	 										"schedule" 											[ stateTopic="vmc/state/schedule", 								commandTopic="vmc/cmd/schedule"  								]
+
+			Type number 	: lowFanSpeed 										"lowFanSpeed" 										[ stateTopic="vmc/state/lowFanSpeed", 							commandTopic="vmc/cmd/lowFanSpeed"  								]
+			Type number 	: highFanSpeed 										"highFanSpeed" 										[ stateTopic="vmc/state/highFanSpeed", 							commandTopic="vmc/cmd/highFanSpeed"  								]
+
+			Type datetime	: date		 										"date" 												[ stateTopic="vmc/state/date", 									commandTopic="vmc/cmd/date"  								]
+			
+			Type switch 	: holidayMode 										"holidayMode" 										[ stateTopic="vmc/state/holidayMode", 							commandTopic="vmc/cmd/holidayMode"  								]
+			Type switch 	: boost		 										"boost" 											[ stateTopic="vmc/state/boost", 								commandTopic="vmc/cmd/boost"  								]
+			
+	}
+
+}
+
