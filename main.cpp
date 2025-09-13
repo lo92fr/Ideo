@@ -2,6 +2,7 @@
 #include "cc1100_raspi.h"
 #include <mosquitto.h>
 #include <iostream>
+#include <ctime>
 #include <unistd.h>
 #include <termios.h>
 #include <fcntl.h>
@@ -118,51 +119,161 @@ int cc1100_freq_select, cc1100_mode_select, cc1100_channel_select;
 bool isPacketAvailable;
 RxPacketData lastRxPacket;
 
+std::string pad2(int n) {
+    if (n < 10)
+        return "0" + std::to_string(n);
+    else
+        return std::to_string(n);
+}
+
 void packetHandler(RawRxPacket *packet) {
   uint16_t param_1 = cc1100.parseUint16(packet->params);
   uint16_t param_2 = cc1100.parseUint16(&packet->params[4]);
   uint8_t bypassmode = 0;
   uint8_t onOffState = 0;
   uint8_t fanmode = 0;
-  const char *message;
   std::string str;
-
+  const char *message;
+  
 
   switch (packet->command)
   {
     case 0x31:
-		str = std::to_string( param_1/10.00);
-	    message = str.c_str();
+        if (param_1==0 && param_2==0) {
+            return;
+        }
+		message = std::to_string( param_1/10.00).c_str();
     	mosquitto_publish(mosq, nullptr, "vmc/state/temperatureSondeAirVicie", strlen(message), message, 0, false);
 
-		str = std::to_string( param_2/10.00);
-	    message = str.c_str();
+		message = std::to_string( param_2/10.00).c_str();
     	mosquitto_publish(mosq, nullptr, "vmc/state/temperatureSondeEntreeAirNeuf", strlen(message), message, 0, false);
 
         break;
 
     case 0x32:
-		str = std::to_string( param_1/10.00);
-	    message = str.c_str();
+        if (param_1==0 && param_2==0) {
+            return;
+        }
+	    message = std::to_string( param_1/10.00).c_str();
     	mosquitto_publish(mosq, nullptr, "vmc/state/temperatureSondeEntreeAirExterieure", strlen(message), message, 0, false);
         break;
 
     case 0x33:
+        if (param_1==0 && param_2==0) {
+            return;
+        }
         bypassmode = ((param_2 >> 12) & 0xf);
         onOffState = (param_2 & 0xFF)==255;
         fanmode = param_1;
 
-		str = std::to_string(bypassmode);
-	    message = str.c_str();
-    	mosquitto_publish(mosq, nullptr, "vmc/state/Bypassmode", strlen(message), message, 0, false);
+	    message = std::to_string(bypassmode).c_str();
+    	mosquitto_publish(mosq, nullptr, "vmc/state/bypassmode", strlen(message), message, 0, false);
 
-		str = std::to_string(fanmode);
-	    message = str.c_str();
-    	mosquitto_publish(mosq, nullptr, "vmc/state/FanMode", strlen(message), message, 0, false);
+	    message = std::to_string(fanmode).c_str();
+    	mosquitto_publish(mosq, nullptr, "vmc/state/fanMode", strlen(message), message, 0, false);
 
-		str = std::to_string(onOffState);
-	    message = str.c_str();
-    	mosquitto_publish(mosq, nullptr, "vmc/state/OnOffState", strlen(message), message, 0, false);
+        message = "OFF";
+        if (onOffState==1) {
+            message = "ON";
+        }
+	    mosquitto_publish(mosq, nullptr, "vmc/state/onOffState", strlen(message), message, 0, false);
+        break;
+    case 0x3A:
+        if ((param_2 & 0xFF) != 0xFF)
+        {
+            uint16_t day = (param_2 & 0xff);
+            uint16_t hour = (param_2 >> 8);
+            uint16_t minute = (param_1 & 0xff);
+
+            if (day>7) {
+                return;
+            }
+
+            printf("day: %d\n", day);
+            printf("hour: %d\n", hour);
+            printf("minute: %d\n", minute);
+            printf("param_1: %d\n", param_1);
+            printf("param_2: %d\n", param_2);
+
+            std::time_t t = std::time(nullptr);
+            std::tm* now = std::localtime(&t);
+
+            int month = now->tm_mon + 1;
+            int year = now->tm_year + 1900;
+
+
+            str = std::to_string(year) + "-" + pad2(month) + "-" + pad2(day) + " " + std::to_string(hour) + ":" + std::to_string(minute);
+	        message = str.c_str();
+            printf("date: %s\n", message);
+    	    mosquitto_publish(mosq, nullptr, "vmc/state/date", strlen(message), message, 0, false);
+        }
+    case 0x3B:
+        if (param_2 == 0)
+        {
+	        message = std::to_string(param_1).c_str();
+    	    mosquitto_publish(mosq, nullptr, "vmc/state/schedule", strlen(message), message, 0, false);
+        }
+        break;
+ 
+    case 0x3C:
+        if (param_2 == 0)
+        {
+	        message = std::to_string(param_1).c_str();
+    	    mosquitto_publish(mosq, nullptr, "vmc/state/lowFanSpeed", strlen(message), message, 0, false);
+        }
+        break;
+
+    case 0x3D:
+        if (param_2 == 0)
+        {
+	        message = std::to_string(param_1).c_str();
+    	    mosquitto_publish(mosq, nullptr, "vmc/state/highFanSpeed", strlen(message), message, 0, false);
+        }
+        break;
+    case 0x3E:
+        if (param_2 == 0)
+        {
+        }
+        break;
+    case 0x3F:
+        if (param_2 == 0)
+        {
+        }
+        break;
+    case 0x41:
+        if (param_2 == 0)
+        {
+            message = "OFF";
+            if (param_1==1) {
+                message = "ON";
+            }
+    	    
+            mosquitto_publish(mosq, nullptr, "vmc/state/holidayMode", strlen(message), message, 0, false);
+        }
+        break;
+    case 0x58:
+        // Set Contact Polarity
+        break;
+    case 0x59:
+        // Dirty filter
+        break;
+    case 0x5A:
+        // 
+        break;
+    case 0x5B:
+        // 
+        break;
+    case 0x5C:
+        // 
+        break;
+    case 0x5D:
+        //         
+        break;
+    case 0x80:
+        //         
+        break;
+    default:
+        printf("Unknown command: 0x%02X\n", packet->command);
         break;
   }
 
@@ -283,14 +394,76 @@ void on_message(struct mosquitto *, void *, const struct mosquitto_message *msg)
         return;
     }
 
-    if (strstr(msg->topic, "ForceBypassmode")) {
-        if (strstr((char*)msg->payload, "OFF")) {
+    if (strstr(msg->topic, "bypassmode")) {
+        if (strstr((char*)msg->payload, "0")) {
             sendCommand("1,40,00000000");
         }
-        else if (strstr((char*)msg->payload, "ON")) {
+        else if (strstr((char*)msg->payload, "9")) {
             sendCommand("1,40,00010022");
         }
     }
+    else if (strstr(msg->topic, "holidayMode")) {
+        if (strstr((char*)msg->payload, "OFF")) {
+            sendCommand("0,41,00000000");
+        }
+        else if (strstr((char*)msg->payload, "ON")) {
+            sendCommand("0,41,00010000");
+        }
+    }
+    else if (strstr(msg->topic, "onOffState")) {
+        if (strstr((char*)msg->payload, "OFF")) {
+            printf("OFF\n");
+            sendCommand("0,5c,00010000");
+        }
+        else if (strstr((char*)msg->payload, "ON")) {
+            printf("ON\n");
+            sendCommand("0,5c,00000000");
+        }
+    }
+    else if (strstr(msg->topic, "schedule")) {
+        if (strstr((char*)msg->payload, "2")) {
+            sendCommand("0,3B,00002000");
+        }
+        else if (strstr((char*)msg->payload, "3")) {
+            sendCommand("0,3B,00003000");
+        }
+        else if (strstr((char*)msg->payload, "4")) {
+            sendCommand("0,3B,00004000");
+        }
+    }
+    else if (strstr(msg->topic, "lowFanSpeed")) {
+        int speed = atoi((char*)msg->payload);
+        if (speed >= 90 && speed <= 325) {
+            char command[20];
+            sprintf(command, "0,3C,%08X", speed << 16);
+            sendCommand(command);
+        }
+    }
+    else if (strstr(msg->topic, "highFanSpeed")) {
+        int speed = atoi((char*)msg->payload);
+        if (speed >= 90 && speed <= 325) {
+            char command[20];
+            sprintf(command, "0,3D,%08X", speed << 16);
+            sendCommand(command);
+        }
+    }
+    else if (strstr(msg->topic, "boost")) {
+        sendCommand("1,94,00000000");
+    }
+    else if (strstr(msg->topic, "temperatureSondeAirVicie") ||
+             strstr(msg->topic, "temperatureSondeEntreeAirNeuf")) {
+        // Lecture
+        sendCommand("0,31,00000000");
+    }
+    else if (strstr(msg->topic, "temperatureSondeEntreeAirExterieure")) {
+        // Lecture
+        sendCommand("0,32,00000000");
+    }
+    else {
+        std::cout << "Commande inconnue sur le topic: " << msg->topic << std::endl;
+        return;
+    }
+    
     
     std::cout << "Message reçu sur " << msg->topic << ": "
               << (char*) msg->payload << std::endl;
@@ -482,7 +655,7 @@ void go2() {
 		}
 		else if (c==' ') {
 			// Test
-			sendCommand("0,5d,00000000");
+			sendCommand("0,80,00000000");
 
 		}
 		else if (c) {
@@ -517,7 +690,9 @@ Command: 58		0x3A		Set Date time
 Command: 59		0x3B		Set Schedule
 Command: 60		0x3C		Set Low Fan Speed
 Command: 61		0x3D		Set High Fan Speed
+Command: 62	    0x3E		Set Schedule Manual Period
 Command: 63	    0x3E		Set Schedule Manual Period
+Command: 64     0x3F        Set Schedule Manual Period   
 
 
 Command: 64		0x40		Set Force Bypass
